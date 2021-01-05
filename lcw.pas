@@ -647,16 +647,6 @@ begin
                       else
                         offstart := 0;
 
-                { if (relative) then
-                  begin
-                       if (getp < UInt16.MaxValue) then  offstart := 0
-                       else
-                            offstart :=   getp - UInt16.MaxValue; ;
-                 end
-                         else   offstart := 0; }
-
-
-
               //Look for matching runs
               offchk := offstart;
               offsetp := getp;
