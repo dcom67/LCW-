@@ -586,7 +586,7 @@ begin
           getp := 0;
           putp := 0;
           // Input length. Used commonly enough to warrant getting it out in advance I guess.
-          getend := High(input);
+          getend := High(Input)+1 ;
           // "Worst case length" code by OmniBlade. We'll just use a buffer of
           // that max length and cut it down to the actual used size at the end.
           // Not using it- it's not big enough in case of some small images.
@@ -642,10 +642,20 @@ begin
 
              //current block size for an offset copy
                block_size := 0;
-              //Set where we start looking for matching runs.
-                  if (relative) and ( getp >= Word.MaxValue) then offstart := Word.MaxValue
+             //Set where we start looking for matching runs.
+                if (relative) and ( getp > Word.MaxValue) then offstart := getp-UInt16.MaxValue
                       else
                         offstart := 0;
+
+                { if (relative) then
+                  begin
+                       if (getp < UInt16.MaxValue) then  offstart := 0
+                       else
+                            offstart :=   getp - UInt16.MaxValue; ;
+                 end
+                         else   offstart := 0; }
+
+
 
               //Look for matching runs
               offchk := offstart;
@@ -687,6 +697,7 @@ begin
                   begin
                       //increment command value
                       inc(output[cmd_onep]);
+                     // output[cmd_onep]:=output[cmd_onep+1];
                       output[putp] := input[getp];
                       inc(putp); Inc(getp);
                   end
@@ -725,7 +736,7 @@ begin
                   end;
                   output[putp] := Byte((offset and $FF));   inc(putp);
                   output[putp] := Byte(((offset shr 8) and $FF));  inc(putp);
-                  getp := getp+ block_size;
+                  getp := getp + block_size;
                   cmd_one := false;
               end;
           end;
